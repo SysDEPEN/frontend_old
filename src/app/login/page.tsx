@@ -2,7 +2,6 @@
 
 import FooterComponent from "@/components/Footer/footer";
 import HeaderComponent from "@/components/Header/header";
-import api from "@/services/api";
 import { FormEvent, useState } from "react";
 
 
@@ -14,9 +13,13 @@ export default function LoginPage() {
   async function handleRegister(e: FormEvent) {
     try {
       e.preventDefault();
-      const user = await api.get(`/user/authent`, {
-        params: { email, password },
-      });
+      // const user = await api.get(`/user/authent`, {
+      //   params: { email, password },
+      // });
+      const user: any = {
+        email,
+        password
+      }
       //salvar o usuario no localstorage para usar futuramente nas paginas
       localStorage.setItem("user", JSON.stringify(user));
       if (localStorage.getItem("user")) {

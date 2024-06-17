@@ -71,7 +71,10 @@ export default function MixedForm() {
      { id: 1, name: "Step 1", status: "complete", bg: "" },
      { id: 2, name: "Step 2", status: "upcoming", bg: ""},
      { id: 3, name: "Step 3", status: "upcoming", bg: ""},
-   ];
+  ];
+  function handleForm2() {
+    window.location.href = '/sendform2'
+  }
   return (
     <section className=" my-20 w-full flex h-[45vw] justify-center items-center ">
       <div
@@ -150,7 +153,7 @@ export default function MixedForm() {
             Salvar rascunho
           </button>
 
-          <button className="flex items-center shadow-lg justify-center p-4 bg-[#009D3F] rounded-md w-[177px] h-[39px]">
+          <button onClick={handleForm2} className="flex items-center shadow-lg justify-center p-4 bg-[#009D3F] rounded-md w-[177px] h-[39px]">
             Enviar documentos
           </button>
         </div>

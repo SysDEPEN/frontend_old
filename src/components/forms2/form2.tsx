@@ -50,6 +50,10 @@ const handleChange = (
      { id: 2, name: "Step 2", status: "complete", bg: ""},
      { id: 3, name: "Step 3", status: "upcoming", bg: ""},
    ];
+  function handleComplete() {
+    window.location.href = '/completeSendForm';
+  }
+  
   return (
     <section className=" my-20 w-full flex h-[45vw] justify-center items-center ">
       <div
@@ -126,14 +130,15 @@ const handleChange = (
             Salvar rascunho
           </button>
 
-          <button className="flex items-center shadow-lg justify-center p-4 bg-[#009D3F] rounded-md w-[177px] h-[39px]">
+          <button
+            onClick={handleComplete}
+            className="flex items-center shadow-lg justify-center p-4 bg-[#009D3F] rounded-md w-[177px] h-[39px]"
+          >
             Enviar documentos
           </button>
         </div>
         <div className=" mt-10">
-
-          <StepComp steps={steps}/>
-   
+          <StepComp steps={steps} />
         </div>
       </div>
     </section>

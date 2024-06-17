@@ -3,7 +3,7 @@ import { ArrowRightCircleIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
 export default function HeaderComponent() {
-  const [userLogged, setUserLogged] = useState(true);
+  const [userLogged, setUserLogged] = useState(false);
   useEffect(() => {
     if (localStorage.getItem("user")) {
       setUserLogged(true);
@@ -21,7 +21,7 @@ export default function HeaderComponent() {
           <a href="/sendform" className="py-4 px-4 uppercase">
             Documentos
           </a>
-          <a href="/listProtocols" className="py-4 px-4 uppercase">
+          <a className="py-4 px-4 uppercase">
             Sobre
           </a>
         </div>
