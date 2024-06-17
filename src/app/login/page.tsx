@@ -1,14 +1,33 @@
+"use client";
+
 import FooterComponent from "@/components/Footer/footer";
 import HeaderComponent from "@/components/Header/header";
-import MixedForm from "@/components/forms/form";
+import api from "@/services/api";
+import { FormEvent, useState } from "react";
 
-export default function sobre() {
-    return (
-      <section className="">
-        <HeaderComponent />
-        
-        <section className="w-full flex h-[45vw] justify-center items-center bg-white">
-          <div 
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  async function handleRegister(e: FormEvent) {
+    try {
+      const user = await api.get(`user/authent`, {
+        params: { email, password },
+      });
+      //salvar o usuario no localstorage para usar futuramente nas paginas
+      localStorage.setItem("user", JSON.stringify(user));
+    } catch (err: any) {
+      setErrorMessage(err);
+    }
+  }
+
+  return (
+    <section className="">
+      <HeaderComponent />
+
+      <section className="w-full flex h-[45vw] justify-center items-center bg-white">
+        <div
           className="
           flex
           bg-[#DAE2E8]
@@ -25,55 +44,61 @@ export default function sobre() {
           mb-2
           h-1/2
           w-full
-          max-w-96">
+          max-w-96"
+        >
+          <label className="block text-gray-700 font-bold m-2 py-1 ">
+            Acessar sua conta
+          </label>
+          <form action="" onSubmit={handleRegister}>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-4 w-64"
+              type="email"
+              placeholder="CPF/RNE"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              id=""
+              name=""
+            />
 
-          <label 
-          className="block text-gray-700 font-bold m-2 py-1 " >
-          Acessar sua conta
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-64"
+              type="password"
+              placeholder="Senha"
+              id=""
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              name=""
+            />
+          </form>
+
+          <label htmlFor="" className=" text-gray-700 m-2 py-1 ">
+            Esqueceu sua senha?
+            <a href="" className="text-blue-700">
+              {" "}
+              Redefinir senha
+            </a>
           </label>
 
-
-
-          <input 
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-4 w-64"
-          type="email"
-          placeholder="CPF/RNE"
-          id=""
-          name=""
-          />
-
-          <input 
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-64"
-          type="password"
-          placeholder="Senha"
-          id=""
-          name=""
-          />
-
-          <label htmlFor="" className=" text-gray-700 m-2 py-1 " >Esqueceu sua senha?
-          <a href="" className="text-blue-700"
-          > Redefinir senha</a>
-          </label>
-
-          <button className="flex items-center shadow-lg justify-center py-4 bg-[#1348D0] rounded-md w-[177px] h-[39px] m-1" >
+          <button
+            onClick={handleRegister}
+            className="flex items-center shadow-lg justify-center py-4 bg-[#1348D0] rounded-md w-[177px] h-[39px] m-1"
+          >
             Entrar
           </button>
 
-          <label htmlFor=""
-          className=" text-gray-700  py-1"
-          >Não possui uma conta? 
-          <a href="/creatAccount"className="text-blue-700"
-          > Crie sua conta.
-          </a>
+          <label htmlFor="" className=" text-gray-700  py-1">
+            Não possui uma conta?
+            <a href="/createAccount" className="text-blue-700">
+              {" "}
+              Crie sua conta.
+            </a>
           </label>
-            
-            
-
-          </div>
-        
-        </section>
-
-        <FooterComponent />
+        </div>
       </section>
-    );
+
+      <FooterComponent />
+    </section>
+  );
 }
