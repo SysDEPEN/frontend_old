@@ -5,7 +5,7 @@ import api from "@/services/api";
 import { FormEvent, useState } from "react";
 
 export default function SendDocument() {
-   const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
@@ -39,7 +39,8 @@ export default function SendDocument() {
     <section className="">
       <HeaderComponent />
       <section className="w-full flex h-[45vw] justify-center items-center bg-white">
-        <div className="
+        <div
+          className="
           flex
           bg-[#DAE2E8]
           shadow-lg
@@ -55,34 +56,35 @@ export default function SendDocument() {
           mb-2
           h-xl
           w-full
-          max-w-96">
-
-
-          <label
-            className="block text-gray-700 font-bold m-2 py-1 " >
+          max-w-96"
+        >
+          <label className="block text-gray-700 font-bold m-2 py-1 ">
             Cadastras sua conta
           </label>
 
-
-          <form action="" className="
+          <form
+            action=""
+            onSubmit={handleRegister}
+            className="
           flex 
           justify-center 
           items-center
-          flex-col">
-
-
+          flex-col"
+          >
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-4 w-64"
               type="text"
               placeholder="Nome Completo"
+              onChange={(e) => setName(e.target.value)}
               id=""
               name=""
             />
 
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-4 w-64"
-              type="email"
+              type="text"
               placeholder="CPF/RNE"
+              onChange={(e) => setDocument(e.target.value)}
               id=""
               name=""
             />
@@ -91,6 +93,7 @@ export default function SendDocument() {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-4 w-64"
               type="email"
               placeholder="Seu email"
+              onChange={(e) => setEmail(e.target.value)}
               id=""
               name=""
             />
@@ -100,17 +103,35 @@ export default function SendDocument() {
               id=""
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-4 w-64"
             >
-              <option value="" disabled selected>Selecione seu gênero</option>
-              <option value="">opc1</option>
-              <option value="">opc2</option>
-              <option value="">opc3</option>
+              <option value="DEFAULT" disabled selected>
+                Selecione seu gênero
+              </option>
 
+              <option
+                onChange={(e) => setGender(e.currentTarget.value)}
+                value="masculino"
+              >
+                Masculino
+              </option>
+              <option
+                onChange={(e) => setGender(e.currentTarget.value)}
+                value="feminino"
+              >
+                Feminino
+              </option>
+              <option
+                onChange={(e) => setGender(e.currentTarget.value)}
+                value="outros"
+              >
+                Outros
+              </option>
             </select>
 
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-4 w-64"
               type="password"
               placeholder="Senha"
+              onChange={(e) => setpassword(e.target.value)}
               id=""
               name=""
             />
@@ -118,37 +139,25 @@ export default function SendDocument() {
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-4 w-64"
               type="password"
-              placeholder="Repitir senha"
+              placeholder="Repetir senha"
+              onChange={(e) => setpassword(e.target.value)}
               id=""
               name=""
             />
 
-            <button className="flex items-center shadow-lg justify-center py-4 bg-[#1348D0] rounded-md w-[177px] h-[39px] m-4 " >
+            <button onClick={handleRegister} className="flex items-center shadow-lg justify-center py-4 bg-[#1348D0] rounded-md w-[177px] h-[39px] m-4 ">
               Cadastrar
             </button>
 
-
-
-            <label htmlFor=""
-              className=" text-gray-700  py-1"
-            >Já possui uma conta?
-              <a href="/login" className="text-blue-700"
-              > Acesse sua conta.
+            <label htmlFor="" className=" text-gray-700  py-1">
+              Já possui uma conta?
+              <a href="/login" className="text-blue-700">
+                {" "}
+                Acesse sua conta.
               </a>
             </label>
-
-
-
-
           </form>
-
-
-
-
         </div>
-
-
-
       </section>
       <FooterComponent />
     </section>
