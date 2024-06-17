@@ -13,6 +13,7 @@ export default function LoginPage() {
 
   async function handleRegister(e: FormEvent) {
     try {
+      e.preventDefault();
       const user = await api.get(`/user/authent`, {
         params: { email, password },
       });
