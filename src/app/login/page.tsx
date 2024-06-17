@@ -13,11 +13,17 @@ export default function LoginPage() {
 
   async function handleRegister(e: FormEvent) {
     try {
-      const user = await api.get(`user/authent`, {
-        params: { email, password },
-      });
+      const data: any = {
+        email,
+        password
+      }
+      const user = await api.get(`user/authent`, data);
       //salvar o usuario no localstorage para usar futuramente nas paginas
       localStorage.setItem("user", JSON.stringify(user));
+      if (localStorage.getItem("user")) {
+        
+      }
+      window.location.href = "/";
     } catch (err: any) {
       setErrorMessage(err);
     }
@@ -50,9 +56,9 @@ export default function LoginPage() {
           <label className="block text-gray-700 font-bold m-2 py-1 ">
             Acessar sua conta
           </label>
-          <form action="" onSubmit={handleRegister}>
+          <form action="" className="flex-col justify-center items-center w-full" onSubmit={handleRegister}>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-4 w-64"
+              className="shadow appearance-none border rounded py-2 px-3 w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-4 "
               type="email"
               placeholder="EMAIL"
               onChange={(e) => {
@@ -63,7 +69,7 @@ export default function LoginPage() {
             />
 
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-64"
+              className="shadow appearance-none border rounded py-2 px-3 w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
               type="password"
               placeholder="Senha"
               id=""
