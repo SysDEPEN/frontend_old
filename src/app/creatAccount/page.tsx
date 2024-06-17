@@ -1,7 +1,40 @@
 import FooterComponent from "@/components/Footer/footer";
 import HeaderComponent from "@/components/Header/header";
+import { UserProps } from "@/interfaces/userProps";
+import api from "@/services/api";
+import { FormEvent, useState } from "react";
 
 export default function SendDocument() {
+   const [errorMessage, setErrorMessage] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setpassword] = useState("");
+  const [gender, setGender] = useState("");
+  const [document, setDocument] = useState("");
+  const [dateBorn, setDateBorn] = useState("");
+
+  async function handleRegister(e: FormEvent) {
+    e.preventDefault();
+
+    const data: UserProps = {
+      name,
+      email,
+      password,
+      document,
+      gender,
+      dateBorn,
+      role: 0,
+    };
+
+    try {
+      await api.post("user", data);
+      alert("Cadastro realizado com sucesso!!");
+      // navigate(`/login`);
+    } catch (err: any) {
+      setErrorMessage(err);
+    }
+  }
+
   return (
     <section className="">
       <HeaderComponent />
