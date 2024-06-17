@@ -5,6 +5,7 @@ import HeaderComponent from "@/components/Header/header";
 import api from "@/services/api";
 import { FormEvent, useState } from "react";
 
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,7 +54,7 @@ export default function LoginPage() {
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-4 w-64"
               type="email"
-              placeholder="CPF/RNE"
+              placeholder="EMAIL"
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
