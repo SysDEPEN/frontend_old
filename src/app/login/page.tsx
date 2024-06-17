@@ -13,9 +13,11 @@ export default function LoginPage() {
 
   async function handleRegister(e: FormEvent) {
     try {
-      const user = await api.get(`user/authent`, {
-        params: { email, password },
-      });
+      const data: any = {
+        email,
+        password
+      }
+      const user = await api.get(`user/authent`, data);
       //salvar o usuario no localstorage para usar futuramente nas paginas
       localStorage.setItem("user", JSON.stringify(user));
       if (localStorage.getItem("user")) {
