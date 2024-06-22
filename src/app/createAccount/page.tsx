@@ -28,7 +28,7 @@ export default function SendDocument() {
     };
 
     try {
-      await api.post("api/v1/users", data);
+      await api.post("api/v1/users/", data);
       alert("Cadastro realizado com sucesso!!");
       // navigate(`/login`);
     } catch (err: any) {
