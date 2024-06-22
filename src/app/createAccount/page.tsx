@@ -1,3 +1,4 @@
+"use client"
 import FooterComponent from "@/components/Footer/footer";
 import HeaderComponent from "@/components/Header/header";
 import { UserProps } from "@/interfaces/userProps";
@@ -27,7 +28,7 @@ export default function SendDocument() {
     };
 
     try {
-      await api.post("user", data);
+      await api.post("api/v1/users", data);
       alert("Cadastro realizado com sucesso!!");
       // navigate(`/login`);
     } catch (err: any) {
@@ -103,7 +104,7 @@ export default function SendDocument() {
               id=""
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline m-4 w-64"
             >
-              <option value="DEFAULT" disabled selected>
+              <option disabled selected>
                 Selecione seu gênero
               </option>
 

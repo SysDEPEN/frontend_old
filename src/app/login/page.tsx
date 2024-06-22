@@ -2,29 +2,27 @@
 
 import FooterComponent from "@/components/Footer/footer";
 import HeaderComponent from "@/components/Header/header";
+import api from "@/services/api";
 import { FormEvent, useState } from "react";
 
-
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [document, setDocument] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function handleRegister(e: FormEvent) {
+  async function handleLogin(e: FormEvent) {
     try {
       e.preventDefault();
-      // const user = await api.get(`/user/authent`, {
-      //   params: { email, password },
-      // });
-      const user: any = {
-        email,
-        password
-      }
+
+      const data = {
+        document,
+        password,
+      };
+
+      const user = api.post("api/v1/logins", data);
+
       //salvar o usuario no localstorage para usar futuramente nas paginas
       localStorage.setItem("user", JSON.stringify(user));
-      if (localStorage.getItem("user")) {
-        
-      }
       window.location.href = "/";
     } catch (err: any) {
       setErrorMessage(err);
@@ -58,13 +56,17 @@ export default function LoginPage() {
           <label className="block text-gray-700 font-bold m-2 py-1 ">
             Acessar sua conta
           </label>
-          <form action="" className="flex-col justify-center items-center w-full" onSubmit={handleRegister}>
+          <form
+            action=""
+            className="flex-col justify-center items-center w-full"
+            onSubmit={handleLogin}
+          >
             <input
               className="shadow appearance-none border rounded py-2 px-3 w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-4 "
               type="email"
               placeholder="EMAIL"
               onChange={(e) => {
-                setEmail(e.target.value);
+                setDocument(e.target.value);
               }}
               id=""
               name=""
@@ -91,7 +93,7 @@ export default function LoginPage() {
           </label>
 
           <button
-            onClick={handleRegister}
+            onClick={handleLogin}
             className="flex items-center shadow-lg justify-center py-4 bg-[#1348D0] rounded-md w-[177px] h-[39px] m-1"
           >
             Entrar
