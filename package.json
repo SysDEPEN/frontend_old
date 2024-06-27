@@ -13,9 +13,12 @@
     "@types/axios": "^0.14.0",
     "dotenv": "^16.4.5",
     "next": "14.2.1",
+    "nextjs-cors": "^2.2.0",
     "react": "^18",
+    "react-date-picker": "^11.0.0",
     "react-dom": "^18",
-    "react-router-dom": "^6.23.1"
+    "react-router-dom": "^6.23.1",
+    "react-tailwindcss-datepicker": "^1.6.6"
   },
   "devDependencies": {
     "@types/node": "^20",

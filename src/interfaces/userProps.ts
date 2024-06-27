@@ -4,6 +4,8 @@ export interface UserProps {
   password: string;
   document: string;
   gender: string;
-  dateBorn: string;
+  dateBorn: any;
   role: number;
+  created_at: string;
+  updated_at: string;
 }

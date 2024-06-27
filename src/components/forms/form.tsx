@@ -148,19 +148,17 @@ export default function MixedForm() {
             </div>
           ))}
         </form>
-        <div className="flex justify-around w-full">
-          <button className="flex mx-2 items-center shadow-lg justify-center p-4 bg-[#1348D0] rounded-md w-[177px] h-[39px]">
+        <div className="flex justify-center w-full">
+          {/* <button className="flex mx-2 items-center shadow-lg justify-center p-4 bg-[#1348D0] rounded-md w-[177px] h-[39px]">
             Salvar rascunho
-          </button>
+          </button> */}
 
           <button onClick={handleForm2} className="flex items-center shadow-lg justify-center p-4 bg-[#009D3F] rounded-md w-[177px] h-[39px]">
             Enviar documentos
           </button>
         </div>
         <div className=" mt-10">
-
           <StepComp steps={steps}/>
-   
         </div>
       </div>
     </section>

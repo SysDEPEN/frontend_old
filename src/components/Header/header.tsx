@@ -6,7 +6,7 @@ export default function HeaderComponent() {
   const [userLogged, setUserLogged] = useState(false);
   useEffect(() => {
     if (localStorage.getItem("user")) {
-      setUserLogged(true);
+      setUserLogged(false);
     }
   });
   return (

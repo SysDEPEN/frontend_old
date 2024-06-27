@@ -6,7 +6,7 @@ import api from "@/services/api";
 import { FormEvent, useState } from "react";
 
 export default function LoginPage() {
-  const [name, setName] = useState("");
+  const [documento, setDocument] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -15,15 +15,19 @@ export default function LoginPage() {
       e.preventDefault();
 
       const data = {
-        name,
+        documento,
         password,
       };
 
-      const user = api.get("api/v1/logins", { data });
+      const user = api.post("api/v1/logins/login",
+        { 
+          document: data.documento,
+          password: data.password
+        });
 
       //salvar o usuario no localstorage para usar futuramente nas paginas
-      localStorage.setItem("user", JSON.stringify(user));
-      // window.location.href = "/";
+      localStorage.setItem("user", JSON.stringify((await user).data));
+      window.location.href = "/";
     } catch (err: any) {
       setErrorMessage(err);
     }
@@ -63,10 +67,10 @@ export default function LoginPage() {
           >
             <input
               className="shadow appearance-none border rounded py-2 px-3 w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-4 "
-              type="email"
-              placeholder="EMAIL"
+              type="text"
+              placeholder="Documento"
               onChange={(e) => {
-                setName(e.target.value);
+                setDocument(e.target.value);
               }}
               id=""
               name=""
