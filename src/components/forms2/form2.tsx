@@ -1,10 +1,11 @@
 "use client";
 import StepComp from "@/components/StepComponents/stepComponent";
 import { stepsProps } from "@/interfaces/stepsProps";
+import api from "@/services/api";
+import Error from "next/error";
 import { useState } from "react";
 
 interface FormData {
-  select1: string;
   input1: string;
   select2: string;
   input2: string;
@@ -19,8 +20,7 @@ interface FormField {
 }
 
 export default function MixedForm() {
-const [formData, setFormData] = useState<FormData>({
-    select1: "",
+  const [formData, setFormData] = useState<FormData>({
     input1: "",
     select2: "",
     input2: "",
@@ -28,32 +28,41 @@ const [formData, setFormData] = useState<FormData>({
     input4: "",
     input5: "",
     input6: "",
-});
+  });
 
-const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-};
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [message, setMessage] = useState("");
 
-  const formFields: FormField[] = [
-    { type: "file", label: "Cópia autenticada do Documento de identidade", name: "input1", inputType: "file", },
-    { type: "file", label: "Documentos que comprove grau de parentesco com o preso", name: "input2", inputType: "file",},
-    { type: "file", label: "Cópia autenticada do CPF", name: "input3", inputType: "file"},
-    { type: "file", label: "Certidão de antecedentes criminais", name: "input4", inputType: "file" },
-    { type: "file", label: "Comprovante de endereço recente em nome do visitante", name: "input5", inputType: "file" },
-    { type: "file", label: "02 fotos 3x4 recentes", name: "input6", inputType: "file" },
+  const handleFileChange = (event: any) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const steps: stepsProps[] = [
+    { id: 1, name: "Step 1", status: "complete", bg: "" },
+    { id: 2, name: "Step 2", status: "complete", bg: "" },
+    { id: 3, name: "Step 3", status: "upcoming", bg: "" },
   ];
 
-   const steps: stepsProps[] = [
-     { id: 1, name: "Step 1", status: "complete", bg: "" },
-     { id: 2, name: "Step 2", status: "complete", bg: ""},
-     { id: 3, name: "Step 3", status: "upcoming", bg: ""},
-   ];
-  function handleComplete() {
-    window.location.href = '/completeSendForm';
+  function handleComplete(event: any) {
+    event.preventDefault();
+
+    if (!selectedFile) {
+      setMessage("Please select a file to upload.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    console.log(formData);
+    api.post("http://localhost:8080/api/v1/upload", formData).then(() => {
+      window.location.href = "/completeSendForm";
+
+    }).catch((e: Error) => {
+      return alert(e);
+    });
   }
-  
+
   return (
     <section className=" my-20 w-full flex h-[45vw] justify-center items-center ">
       <div
@@ -72,64 +81,22 @@ const handleChange = (
           className="
             flex
             flex-col
-          
-          m-2
-          mb-2
-          w-full
+            m-2
+            mb-2
+            w-full
           "
         >
-          {formFields.map((field, index) => (
-            <div key={index} className="mb-4 m flex-wrap max-w-2xl ">
-              <label
-                className="block text-gray-700 font-bold mb-2 "
-                htmlFor={field.name}
-              >
-                {field.label}
-              </label>
-              {field.type === "input" ? (
-                <select
-                  className="
-                  shadow 
-                  appearance-none 
-                  border 
-                  rounded 
-                  w-full 
-                  py-2 
-                  px-3 
-                  text-gray-700 
-                  leading-tight 
-                  focus:outline-none 
-                  focus:shadow-outline"
-                  id={field.name}
-                  name={field.name}
-                  value={formData[field.name]}
-                  onChange={handleChange}
-                >
-                  <option value="">Selecione uma opção</option>
-                  {selectOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id={field.name}
-                  name={field.name}
-                  type={field.inputType}
-                  value={formData[field.name]}
-                  onChange={handleChange}
-                />
-              )}
-            </div>
-          ))}
-        </form>
-        <div className="flex justify-around w-full">
-          <button className="flex mx-2 items-center shadow-lg justify-center p-4 bg-[#1348D0] rounded-md w-[177px] h-[39px]">
-            Salvar rascunho
-          </button>
+          <div className="mb-4 m flex-wrap max-w-2xl ">
+            <label className="block text-gray-700 font-bold mb-2 ">PDF COM TODOS OS DOCUMENTOS</label>
 
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="file"
+              onChange={handleFileChange}
+            />
+          </div>
+        </form>
+        <div className="flex justify-center w-full">
           <button
             onClick={handleComplete}
             className="flex items-center shadow-lg justify-center p-4 bg-[#009D3F] rounded-md w-[177px] h-[39px]"
