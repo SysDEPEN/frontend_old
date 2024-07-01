@@ -3,6 +3,7 @@ import StepComp from "@/components/StepComponents/stepComponent";
 import { stepsProps } from "@/interfaces/stepsProps";
 import api from "@/services/api";
 import axios from "axios";
+import Error from "next/error";
 import { ChangeEvent, useEffect, useState } from "react";
 
 interface FormData {
@@ -171,8 +172,11 @@ export default function MixedForm() {
       },
     };
 
-    api.post("/api/v1/req_camp", data);
-    // window.location.href = "/sendform2";
+    api.post("/api/v1/req_camp", data).then(() => {
+      window.location.href = "/sendform2";
+    }).catch((e: Error) => {
+      console.log(e);
+    });
   }
   return (
     <section className=" my-20 w-full flex h-[45vw] justify-center items-center ">
