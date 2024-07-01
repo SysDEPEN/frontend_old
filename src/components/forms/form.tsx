@@ -3,6 +3,7 @@ import StepComp from "@/components/StepComponents/stepComponent";
 import { stepsProps } from "@/interfaces/stepsProps";
 import api from "@/services/api";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 import Error from "next/error";
 import { ChangeEvent, useEffect, useState } from "react";
 
@@ -156,6 +157,9 @@ export default function MixedForm() {
   }
 
   function handleForm2() {
+    var user: any = localStorage.getItem("user");
+    user = JSON.parse(user);
+    user = jwtDecode(user.Token);
     const data = {
       nome_visitado: nameVisit,
       cpf_rne: cpfRne,
@@ -168,7 +172,7 @@ export default function MixedForm() {
       numero_casa: numberHouse,
       requerimento_assunto: reqAssunto,
       id_user: {
-        id: 1,
+        id: user.id,
       },
     };
 
