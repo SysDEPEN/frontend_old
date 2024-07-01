@@ -10,6 +10,23 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+   const cpfMask = [
+     /[0-9]/,
+     /[0-9]/,
+     /[0-9]/,
+     ".",
+     /[0-9]/,
+     /[0-9]/,
+     /[0-9]/,
+     ".",
+     /[0-9]/,
+     /[0-9]/,
+     /[0-9]/,
+     "-",
+     /[0-9]/,
+     /[0-9]/,
+   ];
+
   async function handleLogin(e: FormEvent) {
     try {
       e.preventDefault();
@@ -69,7 +86,7 @@ export default function LoginPage() {
               className="shadow appearance-none border rounded py-2 px-3 w-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline my-4 "
               type="text"
               placeholder="Documento"
-              onChange={(e) => {
+              onChange={(e: any) => {
                 setDocument(e.target.value);
               }}
               id=""

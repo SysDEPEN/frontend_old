@@ -1,21 +1,24 @@
 "use client";
 import StepComp from "@/components/StepComponents/stepComponent";
 import { stepsProps } from "@/interfaces/stepsProps";
-import { useState } from "react";
+import api from "@/services/api";
+import axios from "axios";
+import { ChangeEvent, useEffect, useState } from "react";
 
 interface FormData {
   select1: string;
   input1: string;
   select2: string;
   input2: string;
-  [key: string]: string; // Índice de assinatura para permitir indexação por string
+  [key: string]: string;
 }
 
-interface FormField {
-  type: "select" | "input";
-  label: string;
-  name: string;
-  inputType?: string;
+interface IBGEUFResponse {
+  sigla: string;
+}
+
+interface IBGECityResponse {
+  nome: string;
 }
 
 export default function MixedForm() {
@@ -31,49 +34,145 @@ export default function MixedForm() {
     input6: "",
     select4: "",
   });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const [nameVisit, setNameVisit] = useState("");
+  const [cpfRne, setcpfRne] = useState("");
+  const [typeVisit, setTypeVisit] = useState("");
+  const [cellphone, setCellphone] = useState("");
+  const [selectedUf, setSelectedUf] = useState("0");
+  const [selectedCity, setSelecdetCity] = useState("0");
+  const [ufs, setUfs] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [district, setDistrict] = useState("");
+  const [street, setStreet] = useState("");
+  const [numberHouse, setnumberHouse] = useState("");
+  const [reqAssunto, setReqAssunto] = useState("");
+  const [idUser, setidUser] = useState();
 
   const selectOptions = [
-    { label: "Opção 1", value: "option1" },
-    { label: "Opção 2", value: "option2" },
-    { label: "Opção 3", value: "option3" },
+    { label: "Parentes", value: "Parentes" },
+    { label: "Amigos", value: "Amigos" },
+    { label: "Visita da igreja", value: "Visita da igreja" },
   ];
 
-  const formFields: FormField[] = [
-    {
-      type: "input",
-      label: "Nome completo do visitado",
-      name: "input1",
-      inputType: "text",
-    },
-    {
-      type: "input",
-      label: "RG/RNE do visitado",
-      name: "input2",
-      inputType: "text",
-    },
-    { type: "select", label: "Tipo de visitação", name: "select1" },
-    { type: "input", label: "Telefone", name: "input3", inputType: "text" },
-    { type: "select", label: "Estado", name: "select2" },
-    { type: "select", label: "Cidade", name: "select3" },
-    { type: "input", label: "Bairro", name: "input4", inputType: "text" },
-    { type: "input", label: "Rua", name: "input5", inputType: "text" },
-    { type: "input", label: "Número", name: "input6", inputType: "text" },
-    { type: "select", label: "Assunto", name: "select4" },
+  const selectReqOptions = [
+    { label: "Visita social", value: "Visita social" },
+    { label: "Visita assistida", value: "Visita assistida" },
+    { label: "Visita intima", value: "Visita intima" },
   ];
 
-   const steps: stepsProps[] = [
-     { id: 1, name: "Step 1", status: "complete", bg: "" },
-     { id: 2, name: "Step 2", status: "upcoming", bg: ""},
-     { id: 3, name: "Step 3", status: "upcoming", bg: ""},
+  const steps: stepsProps[] = [
+    { id: 1, name: "Step 1", status: "complete", bg: "" },
+    { id: 2, name: "Step 2", status: "upcoming", bg: "" },
+    { id: 3, name: "Step 3", status: "upcoming", bg: "" },
   ];
+
+  useEffect(() => {
+    axios
+      .get<IBGEUFResponse[]>(
+        "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
+      )
+      .then((response) => {
+        const ufInitials = response.data.map((uf) => uf.sigla);
+
+        setUfs(ufInitials);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (selectedUf === "0") {
+      return;
+    }
+    axios
+      .get<IBGECityResponse[]>(
+        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`
+      )
+      .then((response) => {
+        const cityNames = response.data.map((city) => city.nome);
+
+        setCities(cityNames);
+      });
+  }, [selectedUf]);
+
+  function handleTypeVisit(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
+    setTypeVisit(e.target.value);
+  }
+  
+  function handleNameVisit(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
+    setNameVisit(e.target.value);
+  }
+
+  function handleCpfRne(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
+    setcpfRne(e.target.value);
+  }
+
+  function handleCellphone(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
+    setCellphone(e.target.value);
+  }
+
+  function handleDistrict(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
+    setDistrict(e.target.value);
+  }
+
+  function handleStreet(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
+    setStreet(e.target.value);
+  }
+
+  function handleNumber(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
+    setnumberHouse(e.target.value);
+  }
+
+  function handleReqAssunto(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
+    setReqAssunto(e.target.value);
+  }
+  
+
+  function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
+    const uf = event.target.value;
+
+    setSelectedUf(uf);
+  }
+
+  function handleSelectCity(event: ChangeEvent<HTMLSelectElement>) {
+    const city = event.target.value;
+
+    setSelecdetCity(city);
+  }
+
   function handleForm2() {
-    window.location.href = '/sendform2'
+    const data = {
+      nome_visitado: nameVisit,
+      cpf_rne: cpfRne,
+      tipo_visitacao: typeVisit,
+      telefone: cellphone,
+      estado: selectedUf,
+      bairro: district,
+      cidade: selectedCity,
+      rua: street,
+      numero_casa: numberHouse,
+      requerimento_assunto: reqAssunto,
+      id_user: {
+        id: 1,
+      },
+    };
+
+    api.post("/api/v1/req_camp", data);
+    // window.location.href = "/sendform2";
   }
   return (
     <section className=" my-20 w-full flex h-[45vw] justify-center items-center ">
@@ -91,27 +190,42 @@ export default function MixedForm() {
       >
         <form
           className="
-          grid
-          grid-flow-col
-          grid-rows-5
-          gap-8 
-          
-          m-2
-          mb-2
-          w-full
+            grid
+            grid-flow-col
+            grid-rows-5
+            gap-7 
+            w-full
+            mb-4
           "
         >
-          {formFields.map((field, index) => (
-            <div key={index} className="mb-4 m flex-wrap max-w-2xl ">
-              <label
-                className="block text-gray-700 font-bold mb-2 "
-                htmlFor={field.name}
-              >
-                {field.label}
-              </label>
-              {field.type === "select" ? (
-                <select
-                  className="
+          <div className="mb-4 m flex-wrap max-w-2xl ">
+            <label className="block text-gray-700 font-bold mb-2 ">
+              Nome completo do visitado
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              value={nameVisit}
+              onChange={handleNameVisit}
+            />
+          </div>
+          <div className="mb-4 m flex-wrap max-w-2xl ">
+            <label className="block text-gray-700 font-bold mb-2 ">
+              CPF ou RNE
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              value={cpfRne}
+              onChange={handleCpfRne}
+            />
+          </div>
+          <div className="mb-4 m flex-wrap max-w-2xl ">
+            <label className="block text-gray-700 font-bold mb-2 ">
+              Tipo de visitação
+            </label>
+            <select
+              className="
                   shadow 
                   appearance-none 
                   border 
@@ -123,42 +237,160 @@ export default function MixedForm() {
                   leading-tight 
                   focus:outline-none 
                   focus:shadow-outline"
-                  id={field.name}
-                  name={field.name}
-                  value={formData[field.name]}
-                  onChange={handleChange}
-                >
-                  <option value="">Selecione uma opção</option>
-                  {selectOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id={field.name}
-                  name={field.name}
-                  type={field.inputType}
-                  value={formData[field.name]}
-                  onChange={handleChange}
-                />
-              )}
-            </div>
-          ))}
+              value={typeVisit}
+              onChange={handleTypeVisit}
+            >
+              <option value="">Selecione uma opção</option>
+              {selectOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4 m flex-wrap max-w-2xl ">
+            <label className="block text-gray-700 font-bold mb-2 ">
+              Assunto do requerimento
+            </label>
+            <select
+              className="
+                  shadow 
+                  appearance-none 
+                  border 
+                  rounded 
+                  w-full 
+                  py-2 
+                  px-3 
+                  text-gray-700 
+                  leading-tight 
+                  focus:outline-none 
+                  focus:shadow-outline"
+              value={reqAssunto}
+              onChange={handleReqAssunto}
+            >
+              <option value="">Selecione uma opção</option>
+              {selectReqOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4 m flex-wrap max-w-2xl ">
+            <label className="block text-gray-700 font-bold mb-2 ">
+              Telefone
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              value={cellphone}
+              onChange={handleCellphone}
+            />
+          </div>
+          <div className="mb-4 m flex-wrap max-w-2xl ">
+            <label className="block text-gray-700 font-bold mb-2 ">
+              Estado
+            </label>
+            <select
+              className="
+                  shadow 
+                  appearance-none 
+                  border 
+                  rounded 
+                  w-full 
+                  py-2 
+                  px-3 
+                  text-gray-700 
+                  leading-tight 
+                  focus:outline-none 
+                  focus:shadow-outline"
+              value={selectedUf}
+              onChange={handleSelectUf}
+            >
+              <option value="">Selecione uma opção</option>
+              {ufs.map((uf) => (
+                <option key={uf} value={uf}>
+                  {uf}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4 m flex-wrap max-w-2xl ">
+            <label className="block text-gray-700 font-bold mb-2 ">
+              Cidade
+            </label>
+            <select
+              className="
+                  shadow 
+                  appearance-none 
+                  border 
+                  rounded 
+                  w-full 
+                  py-2 
+                  px-3 
+                  text-gray-700 
+                  leading-tight 
+                  focus:outline-none 
+                  focus:shadow-outline"
+              value={selectedCity}
+              onChange={handleSelectCity}
+            >
+              <option value="">Selecione uma opção</option>
+              {cities.map((ci) => (
+                <option key={ci} value={ci}>
+                  {ci}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4 m flex-wrap max-w-2xl ">
+            <label className="block text-gray-700 font-bold mb-2 ">
+              Bairro
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              value={district}
+              onChange={handleDistrict}
+            />
+          </div>
+          <div className="mb-4 m flex-wrap max-w-2xl ">
+            <label className="block text-gray-700 font-bold mb-2 ">
+              Rua
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              value={street}
+              onChange={handleStreet}
+            />
+          </div>
+          <div className="mb-4 m flex-wrap max-w-2xl ">
+            <label className="block text-gray-700 font-bold mb-2 ">
+              Número da casa
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              type="text"
+              value={numberHouse}
+              onChange={handleNumber}
+            />
+          </div>
         </form>
         <div className="flex justify-center w-full">
           {/* <button className="flex mx-2 items-center shadow-lg justify-center p-4 bg-[#1348D0] rounded-md w-[177px] h-[39px]">
             Salvar rascunho
           </button> */}
 
-          <button onClick={handleForm2} className="flex items-center shadow-lg justify-center p-4 bg-[#009D3F] rounded-md w-[177px] h-[39px]">
+          <button
+            onClick={handleForm2}
+            className="flex items-center shadow-lg justify-center p-4 bg-[#009D3F] rounded-md w-[177px] h-[39px]"
+          >
             Enviar documentos
           </button>
         </div>
         <div className=" mt-10">
-          <StepComp steps={steps}/>
+          <StepComp steps={steps} />
         </div>
       </div>
     </section>
