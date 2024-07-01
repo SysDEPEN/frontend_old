@@ -2,6 +2,7 @@
 import StepComp from "@/components/StepComponents/stepComponent";
 import { stepsProps } from "@/interfaces/stepsProps";
 import api from "@/services/api";
+import { jwtDecode } from "jwt-decode";
 import Error from "next/error";
 import { useState } from "react";
 
@@ -56,6 +57,20 @@ export default function MixedForm() {
 
     console.log(formData);
     api.post("http://localhost:8080/api/v1/upload", formData).then(() => {
+      var user: any = localStorage.getItem("user");
+      user = JSON.parse(user);
+      user = jwtDecode(user.Token);
+      console.log(user.id);
+      let uriPath = selectedFile.name;
+
+
+      const objectDocuments = {
+        id_user: user.id,
+        documentos: uriPath,
+      };
+
+      console.log(objectDocuments);
+      api.post("http://localhost:8080/api/v1/documents", objectDocuments);
       window.location.href = "/completeSendForm";
 
     }).catch((e: Error) => {
